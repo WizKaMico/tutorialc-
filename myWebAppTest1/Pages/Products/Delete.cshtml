@@ -1,0 +1,27 @@
+﻿@page
+@using System.Data.SqlClient;
+@{
+    int productId = int.Parse(Request.Query["productId"]); 
+
+    try
+    {
+        String connectionString = "Data Source=thinkitsolution\\sqlexpress;Initial Catalog=thinktestnowdb;Integrated Security=True";
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            string deleteProductInfo = "EXEC deleteProductInformation @productId";
+            using (SqlCommand command = new SqlCommand(deleteProductInfo, connection))
+            {
+                command.Parameters.AddWithValue("productId", productId);
+                command.ExecuteNonQuery();
+            }
+        }
+        Response.Redirect("/Products/Index/?response=succesfully deleted");
+    }
+    catch(Exception ex)
+    {
+        throw;
+        Console.WriteLine(ex.Message);
+    }
+
+}
